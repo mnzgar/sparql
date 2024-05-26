@@ -1,24 +1,42 @@
-import './style.css'
-import typescriptLogo from './typescript.svg'
-import viteLogo from '/vite.svg'
-import { setupCounter } from './counter.ts'
+import './style.css';
+import sparqlLogo from './assets/logo-sparql.png';
+import {executeSparqlQuery} from './query-sparql';
 
 document.querySelector<HTMLDivElement>('#app')!.innerHTML = `
   <div>
-    <a href="https://vitejs.dev" target="_blank">
-      <img src="${viteLogo}" class="logo" alt="Vite logo" />
-    </a>
-    <a href="https://www.typescriptlang.org/" target="_blank">
-      <img src="${typescriptLogo}" class="logo vanilla" alt="TypeScript logo" />
-    </a>
-    <h1>Vite + TypeScript</h1>
-    <div class="card">
-      <button id="counter" type="button"></button>
+    <h1>SPARQL Query Interface</h1>
+    <img src="${sparqlLogo}" class="logo" alt="SparQL logo" />
+    <textarea id="query" placeholder="Enter your SPARQL query here"></textarea>
+    <button id="execute">Execute Query</button>
+    <div id="results">
+      <h2>Results:</h2>
+      <pre id="results-content"></pre>
+      <div id="pokemon"></div>
     </div>
-    <p class="read-the-docs">
-      Click on the Vite and TypeScript logos to learn more
+    <p class="info">
+      Consult Pokemon
     </p>
   </div>
-`
+`;
 
-setupCounter(document.querySelector<HTMLButtonElement>('#counter')!)
+document.querySelector('#execute')?.addEventListener('click', async () => {
+  const query = (document.querySelector('#query') as HTMLTextAreaElement).value;
+  const resultsContent = document.querySelector('#results-content') as HTMLPreElement;
+
+  try {
+    const results = await executeSparqlQuery(query);
+    const jsonResults = JSON.stringify(results, null, 2);
+    resultsContent.textContent = JSON.stringify(results, null, 2);
+
+    // document.querySelector('#pokemon').innerHTML = `
+    //   <img :src="image" alt="pokemon" />
+    //   <ul class="list">
+    //     <li>hola</li>
+    //     <li>hola</li>
+    //     <li>hola</li>
+    //   </ul>
+    // `;
+  } catch (error) {
+    resultsContent.textContent = `Error: ${error.message}`;
+  }
+});
