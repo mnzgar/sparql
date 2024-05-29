@@ -25,6 +25,7 @@ WHERE {
   OPTIONAL { ?item wdt:P2067 ?mass. }
   SERVICE wikibase:label { bd:serviceParam wikibase:language "en". }
 }
+ORDER BY ?index
 `;
 
 export const executeSparqlQueryEngine = async (query: string): Promise<any[]> => {

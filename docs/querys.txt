@@ -1,0 +1,65 @@
+# GENERACIONES
+SELECT ?item ?itemLabel
+WHERE {
+  ?item wdt:P31 wd:Q117037768.
+  SERVICE wikibase:label { bd:serviceParam wikibase:language "en". }
+}
+
+# TIPOS
+SELECT ?item ?itemLabel
+WHERE {
+  ?item wdt:P31 wd:Q115980997.
+  SERVICE wikibase:label { bd:serviceParam wikibase:language "en". }
+}
+
+# POKEMON 1º GENERACIÓN
+SELECT ?item ?itemLabel
+WHERE {
+  ?item wdt:P361 wd:Q3245450.
+  ?item wdt:P279 wd:Q1569167.
+  SERVICE wikibase:label { bd:serviceParam wikibase:language "en". }
+}
+
+# POKEMON 1º GENERACIÓN TIPO ELÉCTRICO
+SELECT ?item ?itemLabel
+WHERE {
+  ?item wdt:P361 wd:Q3245450.
+  ?item wdt:P279 wd:Q1569167.
+  { ?item wdt:P31 wd:Q25930719. }
+  UNION { ?item wdt:P31 wd:Q25930759. }
+  SERVICE wikibase:label { bd:serviceParam wikibase:language "en". }
+}
+
+# POKEMON 1º Y 2º GENERACIÓN TIPO NORMAL
+SELECT ?item ?index ?itemLabel ?typeLabel ?image ?mass
+WHERE {
+  ?item wdt:P279 wd:Q1569167.
+  { ?item wdt:P361 wd:Q3245450. }
+  UNION { ?item wdt:P361 wd:Q3245454. }
+  ?item wdt:P31 wd:Q25930498.
+  OPTIONAL { ?item wdt:P1685 ?index. }
+  OPTIONAL {
+    ?item wdt:P31 ?type.
+    ?type rdfs:label ?typeLabel.
+    FILTER(LANG(?typeLabel) = "en" && STRENDS(?typeLabel, "-type Pokémon"))
+  }
+  OPTIONAL { ?item wdt:P18 ?image. }
+  OPTIONAL { ?item wdt:P2067 ?mass. }
+  SERVICE wikibase:label { bd:serviceParam wikibase:language "en". }
+}
+
+SELECT ?item ?index ?itemLabel ?typeLabel ?image ?mass
+WHERE {
+  ?item wdt:P361 wd:Q3245450.
+  ?item wdt:P279 wd:Q1569167.
+  OPTIONAL { ?item wdt:P1685 ?index. }
+  OPTIONAL {
+    ?item wdt:P31 ?type.
+    ?type rdfs:label ?typeLabel.
+    FILTER(LANG(?typeLabel) = "en" && STRENDS(?typeLabel, "-type Pokémon"))
+  }
+  OPTIONAL { ?item wdt:P18 ?image. }
+  OPTIONAL { ?item wdt:P2067 ?mass. }
+  SERVICE wikibase:label { bd:serviceParam wikibase:language "en". }
+}
+

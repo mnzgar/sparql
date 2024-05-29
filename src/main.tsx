@@ -56,18 +56,20 @@ $(document).ready(function() {
     const selectedValues = $(this).val();
     const queryTextarea: HTMLTextAreaElement = document.querySelector('#query') as HTMLTextAreaElement;
 
-    const newQuery = `{ ${selectedValues.join(" }\n  UNION { ")} }`;
+    const newQuery: string = `{ ${selectedValues?.join(" }\n  UNION { ")} }`;
 
     let query: string[] = queryTextarea.value.split('\n');
-    const startPosition = query.findIndex(line => line.includes('wdt:P279'));
-    let endPosition = query.findIndex(line => line.includes('wdt:P1685'));
+    const startPosition: number = query.findIndex(line => line.includes('wdt:P279'));
+    let endPosition: number = query.findIndex(line => line.includes('wdt:P1685'));
     if (startPosition !== -1 && endPosition !== -1) {
-      let i = startPosition + 1;
+      let i: number = startPosition + 1;
       while (i < endPosition) {
         query.splice(i, 1);
         endPosition--;
       }
-      query.splice(endPosition, 0, `  ${newQuery}`);
+      if (newQuery !== '{ undefined }') {
+        query.splice(endPosition, 0, `  ${newQuery}`);
+      }
     }
     queryTextarea.value = query.join('\n');
   });
@@ -90,8 +92,6 @@ document.querySelector('#execute')?.addEventListener('click', async () => {
 });
 
 const createTable = (data: any, resultsContent: HTMLPreElement): void => {
-  console.log(data[0].index.value)
-
   const table: HTMLTableElement = document.createElement('table');
   table.style.borderCollapse = 'collapse';
   table.style.width = '100%';
@@ -115,8 +115,17 @@ const createTable = (data: any, resultsContent: HTMLPreElement): void => {
     const tr: HTMLTableRowElement = document.createElement('tr');
     columns.forEach((column: string): void => {
       const td: HTMLTableCellElement = document.createElement('td');
-      console.log(row[column])
-      td.textContent = row[column]?.value ?? 'N/A';
+      const value = row[column]?.value ?? 'N/A';
+      if (value.endsWith('.jpg')) {
+        const img: HTMLImageElement = document.createElement('img');
+        img.src = value;
+        img.alt = 'Image';
+        img.style.maxWidth = '100px';
+        img.style.height = 'auto';
+        td.appendChild(img);
+      } else {
+        td.textContent = value;
+      }
       td.style.border = '1px solid black';
       td.style.padding = '8px';
       tr.appendChild(td);
