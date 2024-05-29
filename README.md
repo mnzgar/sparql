@@ -7,8 +7,8 @@
 
 1.  **Clone the repository**
 
-[//]: # (   TODO Añadir repo)
     ```zsh
+    git@github.com:mnzgar/sparql.git
     ```
 
 2.  **Run**
